@@ -36,7 +36,7 @@ def _knn(target, source, k):
     labels = list(source[:, -1])  # 获取源数据标签
     dists = list((((feats - target) ** 2).sum(1)) ** 0.5)  # 计算欧氏距离
     dists = {k: v for k, v in zip(dists, labels)}  # 打包距离和标签
-    dists = {k: dists[k] for k in sorted(dists.keys())}  # 根据距离排序
+    dists = {k: dists[k] for k in sorted(dists.keys())}  # 根据距离排序 
     results = [k for k, v in Counter(list(dists.values())[:k]).items()]  # 统计前k个标签的数量，按降序排列
     return results[0]  # 返回概率最大的标签
 
