@@ -2,16 +2,15 @@ import numpy as np
 from collections import Counter
 
 
-def createSource(source):
-    return np.array(source).T
-
-
+# 封装成类
 class KNN(object):
     def __init__(self, targets, sources, k):
-        self.targets = targets
-        self.sources = sources
-        self.k = k
+        self.targets = targets  # 目标数据
+        self.sources = sources  # 源数据
+        self.k = k  # 取前k个距离的特征点
 
+    # 计算欧氏距离
+    # 利用numpy矩阵的特点直接进行矩阵加减
     def __distance(self, feats, target):
         return list((((feats - target) ** 2).sum(1)) ** 0.5)
 
@@ -26,11 +25,12 @@ class KNN(object):
 
     def knn(self):
         for t in self.targets:
-            label = self.__knn(t[1:-1], self.sources, self.k)
-            t[-1] = label
+            label = self.__knn(t[1:-1], self.sources, self.k)  # 获得最大概率标签
+            t[-1] = label  # 赋值
         print('result\n', self.targets)
 
 
+# 单独的函数
 def _knn(target, source, k):
     feats = source[:, 1:-1].astype(np.int)  # 获取源数据特征
     labels = list(source[:, -1])  # 获取源数据标签
@@ -41,11 +41,16 @@ def _knn(target, source, k):
     return results[0]  # 返回概率最大的标签
 
 
+# 单独的函数
 def knn(targets, sources, k):
     for t in targets:
         label = _knn(t[1:-1], sources, k)
         t[-1] = label
     print(targets)
+
+#构造数据
+def createSource(source):
+    return np.array(source).T
 
 
 if __name__ == '__main__':
@@ -57,11 +62,12 @@ if __name__ == '__main__':
         ['爱情片', '爱情片', '爱情片', '动作片', '动作片', '动作片'],
     ]
     sources = createSource(data)
-    print('training data\n', sources)
+    print('source data\n', sources)
     targets = np.array([['喜洋洋', 24, 60, 20, None],
                         ['美羊羊', 54, 1, 30, None],
                         ['懒羊羊', 32, 20, 40, None],
                         ['沸羊羊', 94, 60, 10, None]])
     print('target data\n', targets)
+
     k = KNN(targets, sources, 3)
     k.knn()
